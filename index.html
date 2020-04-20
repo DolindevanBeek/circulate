@@ -53,12 +53,23 @@
 </head>
 
 <body>
-  <p id="server-time"></p>
 
-  <ul id="messages"></ul>
+  <form action="">
+    <div class="step step1">
+      <input type="radio" id="opt1" name="options" value="1">
+      <label for="op1">1</label><br>
+      <input type="radio" id="opt2" name="options" value="2">
+      <label for="opt2">2</label><br>
+      <input type="radio" id="opt3" name="options" value="3">
+      <label for="opt3">3</label>
+  </form>
+
+  <p id="chosenOption"></p>
+
+  <!-- <ul id="messages"></ul>
   <form action="">
     <input id="m" autocomplete="off" /><button>Send</button>
-  </form>
+  </form> -->
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -66,26 +77,46 @@
   <script>
 
     var socket = io();
-    var el;
+    // var el;
 
-      socket.on('time', function (timeString) {
-        el = document.getElementById('server-time')
-        el.innerHTML = 'Server time: ' + timeString;
-      });
+    //   socket.on('time', function (timeString) {
+    //     el = document.getElementById('server-time')
+    //     el.innerHTML = 'Server time: ' + timeString;
+    //   });
 
     $(function () {
       //var socket = io();
 
-      $('form').submit(function (e) {
-        e.preventDefault(); // prevents page reloading
-        socket.emit('chat message', $('#m').val());
-        $('#m').val('');
-        return false;
-      });
+      // $('form').submit(function (e) {
+      //   e.preventDefault(); // prevents page reloading
+      //   socket.emit('chat message', $('#m').val());
+      //   $('#m').val('');
+      //   return false;
+      // });
 
-      socket.on('chat message', function (msg) {
-        $('#messages').append($('<li>').text(msg));
-      });
+      var radios = document.getElementsByName('options');
+
+      for (var i = 0, length = radios.length; i < length; i++) {
+        if (radios[i].checked) {
+          // do whatever you want with the checked radio
+          var radioValue = radios[i].value;
+
+          socket.emit('checked radio', radioValue);
+
+          //alert(radios[i].value);
+
+          // only one radio can be logically checked, don't check the rest
+          break;
+        }
+      }
+
+    socket.on('checked radio', function (checkedRadio) {
+      $('#chosenOption').append($('<li>').text(checkedRadio));
+    });
+
+      // socket.on('chat message', function (msg) {
+      //   $('#messages').append($('<li>').text(msg));
+      // });
 
     });
 

@@ -21,6 +21,10 @@ io.on('connection', (socket) => {
     io.emit('chat message', msg);
   });
 
+  socket.on('checked radio', (checkedRadio) => {
+    io.emit('checked radio', checkedRadio);
+  });
+
 });
 
 setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
